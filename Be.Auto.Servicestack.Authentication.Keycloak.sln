@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34322.80
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Be.Auto.Servicestack.Authentication.Keycloak", "Be.Auto.Servicestack.Authentication.Keycloak\Be.Auto.Servicestack.Authentication.Keycloak.csproj", "{4B697E44-D6D6-4F2B-AE66-C12C3BF47116}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example.Authentication.Keycloak.Servicestack", "Example.Authentication.Keycloak.Servicestack\Example.Authentication.Keycloak.Servicestack.csproj", "{090535FF-D392-4B53-BF93-30F93A20D79F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example.Authentication.Keycloak.Servicestack.Client", "Example.Authentication.Keycloak.Servicestack.Client\Example.Authentication.Keycloak.Servicestack.Client.csproj", "{D608EF84-4886-4638-B998-A125120FCBFF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4B697E44-D6D6-4F2B-AE66-C12C3BF47116}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B697E44-D6D6-4F2B-AE66-C12C3BF47116}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B697E44-D6D6-4F2B-AE66-C12C3BF47116}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B697E44-D6D6-4F2B-AE66-C12C3BF47116}.Release|Any CPU.Build.0 = Release|Any CPU
+		{090535FF-D392-4B53-BF93-30F93A20D79F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{090535FF-D392-4B53-BF93-30F93A20D79F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{090535FF-D392-4B53-BF93-30F93A20D79F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{090535FF-D392-4B53-BF93-30F93A20D79F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D608EF84-4886-4638-B998-A125120FCBFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D608EF84-4886-4638-B998-A125120FCBFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D608EF84-4886-4638-B998-A125120FCBFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D608EF84-4886-4638-B998-A125120FCBFF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CA7631DD-B824-47EB-93C8-5D5EF4FD3D5A}
+	EndGlobalSection
+EndGlobal
