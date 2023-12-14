@@ -1,0 +1,14 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Be.Auto.Servicestack.Authentication.Keycloak/bin/Debug/net8.0
+/Be.Auto.Servicestack.Authentication.Keycloak/obj
+/Example.Authentication.Keycloak.Servicestack/bin/Debug/net8.0
+/Example.Authentication.Keycloak.Servicestack/obj/Debug/net8.0
+/Example.Authentication.Keycloak.Servicestack/obj
+/Example.Authentication.Keycloak.Servicestack.Client/obj
+/.vs/Be.Auto.Servicestack.Authentication.Keycloak/config
+/.vs/Be.Auto.Servicestack.Authentication.Keycloak/FileContentIndex
+/.vs/Be.Auto.Servicestack.Authentication.Keycloak/v17
+/Be.Auto.Servicestack.Authentication.Keycloak/Properties
