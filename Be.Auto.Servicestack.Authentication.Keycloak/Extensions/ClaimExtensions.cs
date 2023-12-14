@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq.Expressions;
@@ -12,7 +13,43 @@ namespace Be.Auto.Servicestack.Authentication.Keycloak.Extensions
 {
     internal static class ClaimExtensions
     {
-        internal static string PropertyName(this Expression<Func<AuthUserSession, object>> func)
+        internal static string PropertyName(this Expression<Func<IAuthSessionExtended, object>>? func)
+
+        {
+
+            switch (func.Body)
+            {
+                case MemberExpression memberExpression:
+                    return memberExpression.Member.Name;
+                case UnaryExpression { Operand: MemberExpression operand }:
+                    return operand.Member.Name;
+                default:
+                    return func.ToString().Split('.').Last();
+
+            }
+
+
+
+        }
+        internal static string PropertyName(this Expression<Func<IAuthSession, object>>? func)
+
+        {
+
+            switch (func.Body)
+            {
+                case MemberExpression memberExpression:
+                    return memberExpression.Member.Name;
+                case UnaryExpression { Operand: MemberExpression operand }:
+                    return operand.Member.Name;
+                default:
+                    return func.ToString().Split('.').Last();
+
+            }
+
+
+
+        }
+        internal static string PropertyName(this Expression<Func<object, object>>? func)
 
         {
 
@@ -32,11 +69,10 @@ namespace Be.Auto.Servicestack.Authentication.Keycloak.Extensions
 
         private static bool IsPropertyEnumerable(Type? propertyType) => (typeof(IEnumerable).IsAssignableFrom(propertyType) || propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>)) && propertyType != typeof(string);
 
-        internal static void AddMapIfNotExists(
-          this ICollection<KeycloakClaimMap> list,
-          KeycloakClaimMap item)
+        internal static void AddMapIfNotExists(this ICollection<KeycloakClaimMap> list, KeycloakClaimMap item)
+
         {
-            if (list.Any(x => x.Property.PropertyName() == item.Property.PropertyName()))
+            if (list.Any(x => x.Property == item.Property))
             {
                 return;
             }
@@ -62,18 +98,21 @@ namespace Be.Auto.Servicestack.Authentication.Keycloak.Extensions
         {
             var avaibleMaps = maps.ToList();
 
+
+
             avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.UserAuthName, "preferred_username"));
             avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.UserAuthId, "sub"));
             avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.EmailConfirmed!, "email_verified"));
             avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.Roles, "role"));
             avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.Permissions, "groups"));
-            avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.FullName, "name"));
+            avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.DisplayName, "name"));
             avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.UserName, "preferred_username"));
             avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.FirstName, "given_name"));
             avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.LastName, "family_name"));
             avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.Email, "email"));
+ 
 
-            avaibleMaps = avaibleMaps.GroupBy(t => t.Property.PropertyName()).Select(t => t.First()).ToList();
+            avaibleMaps = avaibleMaps.GroupBy(t => t.Property).Select(t => t.First()).ToList();
 
             var json = await userProfileUrl.PostStringToUrlAsync(requestFilter: req => req.With(c =>
             {
@@ -85,7 +124,7 @@ namespace Be.Auto.Servicestack.Authentication.Keycloak.Extensions
 
             foreach (var keycloakClaimMap in avaibleMaps)
             {
-                var property = keycloakClaimMap.Property.PropertyName();
+                var property = keycloakClaimMap.Property;
 
                 var jsonKey = keycloakClaimMap.JsonKey;
 

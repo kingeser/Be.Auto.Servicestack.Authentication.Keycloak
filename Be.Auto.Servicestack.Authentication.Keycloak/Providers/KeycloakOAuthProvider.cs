@@ -194,7 +194,6 @@ namespace Be.Auto.Servicestack.Authentication.Keycloak.Providers
             session.IsAuthenticated = !accessTokenResult.AccessToken.IsNullOrEmpty();
         }
 
-
         protected override async Task LoadUserAuthInfoAsync(
           AuthUserSession userSession,
           IAuthTokens tokens,
@@ -204,24 +203,24 @@ namespace Be.Auto.Servicestack.Authentication.Keycloak.Providers
             await _maps.MapClaims(UserProfileUrl, tokens.AccessToken, userSession, tokens);
         }
 
-        public KeycloakOAuthProvider MapClaim(KeycloakClaimMap map)
+        public IKeycloakAuthProvider MapClaim(KeycloakClaimMap map)
         {
             _maps.AddMapIfNotExists(map);
             return this;
         }
 
-        public KeycloakOAuthProvider MapClaims(params KeycloakClaimMap[] maps)
+        public IKeycloakAuthProvider MapClaims(params KeycloakClaimMap[] maps)
         {
             _maps.AddMapIfNotExists(maps);
             return this;
         }
 
-        public KeycloakOAuthProvider MapClaim(
-          Expression<Func<AuthUserSession, object>> property,
-          string jsonKey)
+        public IKeycloakAuthProvider MapClaim(Expression<Func<IAuthSessionExtended, object>> property, string jsonKey)
         {
             MapClaim(new KeycloakClaimMap(property, jsonKey));
             return this;
         }
+     
+
     }
 }

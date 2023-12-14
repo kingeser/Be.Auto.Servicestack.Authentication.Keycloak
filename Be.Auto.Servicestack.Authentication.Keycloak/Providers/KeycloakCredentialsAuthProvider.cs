@@ -177,25 +177,24 @@ namespace Be.Auto.Servicestack.Authentication.Keycloak.Providers
             session.IsAuthenticated = !accessTokenResult.AccessToken.IsNullOrEmpty();
         }
 
-        public KeycloakCredentialsAuthProvider MapClaim(KeycloakClaimMap map)
+        public IKeycloakAuthProvider MapClaim(KeycloakClaimMap map)
         {
             _maps.AddMapIfNotExists(map);
             return this;
         }
 
-        public KeycloakCredentialsAuthProvider MapClaims(params KeycloakClaimMap[] maps)
+        public IKeycloakAuthProvider MapClaims(params KeycloakClaimMap[] maps)
         {
             _maps.AddMapIfNotExists(maps);
             return this;
         }
 
-        public KeycloakCredentialsAuthProvider MapClaim(
-          Expression<Func<AuthUserSession, object>> property,
-          string jsonKey)
+        public IKeycloakAuthProvider MapClaim(Expression<Func<IAuthSessionExtended, object>> property, string jsonKey)
         {
             MapClaim(new KeycloakClaimMap(property, jsonKey));
             return this;
         }
+
 
     }
 }
