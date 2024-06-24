@@ -8,19 +8,20 @@ namespace Be.Auto.Servicestack.Authentication.Keycloak.Claim
 
     public partial class KeycloakClaimMap
     {
-        public KeycloakClaimMap(Expression<Func<IAuthSessionExtended, object>> property, string jsonKey)
+      
+        public KeycloakClaimMap(Expression<Func<AuthUserSession, object>> property, string jsonKey)
         {
             Property = property.PropertyName();
             JsonKey = jsonKey;
         }
 
-        public KeycloakClaimMap(string property, string jsonKey)
+        public KeycloakClaimMap(string? property, string jsonKey)
         {
             Property = property;
             JsonKey = jsonKey;
         }
 
-        public string Property { get; set; }
+        public string? Property { get; set; }
 
         public string JsonKey { get; set; }
     }

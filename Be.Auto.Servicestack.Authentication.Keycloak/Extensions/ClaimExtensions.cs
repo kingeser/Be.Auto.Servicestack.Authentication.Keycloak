@@ -13,79 +13,53 @@ namespace Be.Auto.Servicestack.Authentication.Keycloak.Extensions
 {
     internal static class ClaimExtensions
     {
-        internal static string PropertyName(this Expression<Func<IAuthSessionExtended, object>>? func)
+        internal static string? PropertyName(this Expression<Func<AuthUserSession, object>>? func) =>
+            func?.Body switch
+            {
+                MemberExpression memberExpression => memberExpression.Member.Name,
+                UnaryExpression { Operand: MemberExpression operand } => operand.Member.Name,
+                _ => func?.ToString().Split('.').Last()
+            };
+        internal static string? PropertyName(this Expression<Func<IAuthSessionExtended, object>>? func) =>
+            func?.Body switch
+            {
+                MemberExpression memberExpression => memberExpression.Member.Name,
+                UnaryExpression { Operand: MemberExpression operand } => operand.Member.Name,
+                _ => func?.ToString().Split('.').Last()
+            };
+
+        internal static string? PropertyName(this Expression<Func<IAuthSession, object>>? func) =>
+            func?.Body switch
+            {
+                MemberExpression memberExpression => memberExpression.Member.Name,
+                UnaryExpression { Operand: MemberExpression operand } => operand.Member.Name,
+                _ => func?.ToString().Split('.').Last()
+            };
+
+        internal static string? PropertyName(this Expression<Func<object, object>>? func) =>
+            func?.Body switch
+            {
+                MemberExpression memberExpression => memberExpression.Member.Name,
+                UnaryExpression { Operand: MemberExpression operand } => operand.Member.Name,
+                _ => func?.ToString().Split('.').Last()
+            };
+        private static bool IsPropertyDictionary(Type? propertyType) => propertyType != null && (typeof(IDictionary).IsAssignableFrom(propertyType) || propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(IDictionary<object, object>)) && propertyType != typeof(string);
+        private static bool IsPropertyEnumerable(Type? propertyType) => propertyType != null && (typeof(IEnumerable).IsAssignableFrom(propertyType) || propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>)) && propertyType != typeof(string);
+
+        internal static void AddMap(this ICollection<KeycloakClaimMap> list, KeycloakClaimMap item)
 
         {
 
-            switch (func.Body)
-            {
-                case MemberExpression memberExpression:
-                    return memberExpression.Member.Name;
-                case UnaryExpression { Operand: MemberExpression operand }:
-                    return operand.Member.Name;
-                default:
-                    return func.ToString().Split('.').Last();
-
-            }
-
-
-
-        }
-        internal static string PropertyName(this Expression<Func<IAuthSession, object>>? func)
-
-        {
-
-            switch (func.Body)
-            {
-                case MemberExpression memberExpression:
-                    return memberExpression.Member.Name;
-                case UnaryExpression { Operand: MemberExpression operand }:
-                    return operand.Member.Name;
-                default:
-                    return func.ToString().Split('.').Last();
-
-            }
-
-
-
-        }
-        internal static string PropertyName(this Expression<Func<object, object>>? func)
-
-        {
-
-            switch (func.Body)
-            {
-                case MemberExpression memberExpression:
-                    return memberExpression.Member.Name;
-                case UnaryExpression { Operand: MemberExpression operand }:
-                    return operand.Member.Name;
-                default:
-                    return func.ToString().Split('.').Last();
-
-            }
-
-
-        }
-
-        private static bool IsPropertyEnumerable(Type? propertyType) => (typeof(IEnumerable).IsAssignableFrom(propertyType) || propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>)) && propertyType != typeof(string);
-
-        internal static void AddMapIfNotExists(this ICollection<KeycloakClaimMap> list, KeycloakClaimMap item)
-
-        {
-            if (list.Any(x => x.Property == item.Property))
-            {
-                return;
-            }
             list.Add(item);
         }
 
-        internal static void AddMapIfNotExists(
+        internal static void AddMap(
           this ICollection<KeycloakClaimMap> list,
           ICollection<KeycloakClaimMap> items)
         {
             foreach (var keycloakClaimMap in items)
             {
-                list.AddMapIfNotExists(keycloakClaimMap);
+                list.AddMap(keycloakClaimMap);
             }
         }
 
@@ -99,20 +73,18 @@ namespace Be.Auto.Servicestack.Authentication.Keycloak.Extensions
             var avaibleMaps = maps.ToList();
 
 
+           avaibleMaps.AddMap(new KeycloakClaimMap(t => t.UserAuthName, "preferred_username"));
+           avaibleMaps.AddMap(new KeycloakClaimMap(t => t.UserAuthId, "sub"));
+           avaibleMaps.AddMap(new KeycloakClaimMap(t => t.EmailConfirmed!, "email_verified"));
+           avaibleMaps.AddMap(new KeycloakClaimMap(t => t.Roles, "role"));
+           avaibleMaps.AddMap(new KeycloakClaimMap(t => t.Permissions, "groups"));
+           avaibleMaps.AddMap(new KeycloakClaimMap(t => t.DisplayName, "name"));
+           avaibleMaps.AddMap(new KeycloakClaimMap(t => t.UserName, "preferred_username"));
+           avaibleMaps.AddMap(new KeycloakClaimMap(t => t.FirstName, "given_name"));
+           avaibleMaps.AddMap(new KeycloakClaimMap(t => t.LastName, "family_name"));
+           avaibleMaps.AddMap(new KeycloakClaimMap(t => t.Email, "email"));
 
-            avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.UserAuthName, "preferred_username"));
-            avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.UserAuthId, "sub"));
-            avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.EmailConfirmed!, "email_verified"));
-            avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.Roles, "role"));
-            avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.Permissions, "groups"));
-            avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.DisplayName, "name"));
-            avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.UserName, "preferred_username"));
-            avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.FirstName, "given_name"));
-            avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.LastName, "family_name"));
-            avaibleMaps.AddMapIfNotExists(new KeycloakClaimMap(t => t.Email, "email"));
- 
-
-            avaibleMaps = avaibleMaps.GroupBy(t => t.Property).Select(t => t.First()).ToList();
+            avaibleMaps = avaibleMaps.GroupBy(t => new { t.Property, t.JsonKey }).Select(t => t.First()).ToList();
 
             var json = await userProfileUrl.PostStringToUrlAsync(requestFilter: req => req.With(c =>
             {
@@ -162,30 +134,43 @@ namespace Be.Auto.Servicestack.Authentication.Keycloak.Extensions
         {
             try
             {
-                var converter = TypeDescriptor.GetConverter(property.PropertyType);
+                var propType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                var converter = TypeDescriptor.GetConverter(propType);
                 var text = obj.Get(jsonKey);
-                if (IsNullableType(property.PropertyType))
+                if (IsPropertyDictionary(propType))
                 {
-                    if (IsPropertyEnumerable(Nullable.GetUnderlyingType(property.PropertyType)))
-                    {
-                        var obj1 = JsonSerializer.DeserializeFromString(obj.GetArray<object>(jsonKey).SerializeToString(), property.PropertyType);
-                        property.SetValue(session, obj1, null);
-                    }
-                    else
-                    {
-                        var obj2 = converter.ConvertFromString(text);
-                        property.SetValue(session, obj2, null);
-                    }
+                    var dictionary = property.GetValue(session)?.ConvertTo<IDictionary<object, object>>() ?? Activator.CreateInstance<Dictionary<object, object>>();
+
+                    dictionary.TryGetValue(jsonKey, out var outputValue);
+
+                    var existValue = outputValue?.ToString()?.Split("|")?.Where(t => !string.IsNullOrEmpty(t)).ConvertTo<List<object>>() ?? [];
+
+                    var enumerableValue = JsonSerializer.DeserializeFromString<IEnumerable<object>>(obj.GetArray<object>(jsonKey).SerializeToString());
+
+                    var newValue = existValue?.Union(enumerableValue)?.Distinct()?.Where(t => !string.IsNullOrEmpty(t?.ToString()))!.Join("|") ?? string.Empty;
+
+                    dictionary[jsonKey] = newValue;
+
+                    property.SetValue(session, dictionary.ConvertTo(property.PropertyType), null);
                 }
-                else if (IsPropertyEnumerable(property.PropertyType))
+                else if (IsPropertyEnumerable(propType))
                 {
-                    var obj3 = JsonSerializer.DeserializeFromString(obj.GetArray<object>(jsonKey).SerializeToString(), property.PropertyType);
-                    property.SetValue(session, obj3, null);
+
+                    var existValue = property.GetValue(session)?.ConvertTo<IEnumerable<object>>() ?? Activator.CreateInstance<List<object>>();
+
+                    var enumerableValue = JsonSerializer.DeserializeFromString<IEnumerable<object>>(obj.GetArray<object>(jsonKey).SerializeToString());
+
+                    var newValue = existValue.Union(enumerableValue).ConvertTo(propType);
+
+                    property.SetValue(session, newValue, null);
+
                 }
+
+
                 else
                 {
-                    var obj4 = converter.ConvertFromString(text);
-                    property.SetValue(session, obj4, null);
+                    var value = converter.ConvertFromString(text);
+                    property.SetValue(session, value, null);
                 }
             }
             catch (Exception e)

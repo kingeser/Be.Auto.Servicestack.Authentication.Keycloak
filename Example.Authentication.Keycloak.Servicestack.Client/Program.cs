@@ -11,8 +11,8 @@ Console.WriteLine("---------------------------------------------------------");
 
 var client = new JsonServiceClient("https://localhost:44312")
 {
-    UserName = "Admin",
-    Password = "password",
+    UserName = "test@test.com",
+    Password = "123456",
     AlwaysSendBasicAuthHeader = true
 
 };
@@ -21,8 +21,8 @@ try
 {
     var authenticateResponse = client.Post(new Authenticate(KeycloakAuthProviders.CredentialsProvider)
     {
-        UserName = "admin",
-        Password = "password",
+        UserName = "test@test.com",
+        Password = "123456",
         RememberMe = true
     });
 

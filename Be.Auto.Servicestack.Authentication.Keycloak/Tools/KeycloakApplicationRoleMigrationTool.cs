@@ -52,7 +52,7 @@ namespace Be.Auto.Servicestack.Authentication.Keycloak.Tools
                     .Select(role => new Tuple<string, string>(role, description))
                     .ToList();
 
-                if (methods.Any())
+                 if (methods.Any())
                 {
                     source.AddRange(methods);
                 }

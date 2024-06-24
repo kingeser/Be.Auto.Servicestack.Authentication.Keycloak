@@ -179,17 +179,17 @@ namespace Be.Auto.Servicestack.Authentication.Keycloak.Providers
 
         public IKeycloakAuthProvider MapClaim(KeycloakClaimMap map)
         {
-            _maps.AddMapIfNotExists(map);
+            _maps.AddMap(map);
             return this;
         }
 
         public IKeycloakAuthProvider MapClaims(params KeycloakClaimMap[] maps)
         {
-            _maps.AddMapIfNotExists(maps);
+            _maps.AddMap(maps);
             return this;
         }
-
-        public IKeycloakAuthProvider MapClaim(Expression<Func<IAuthSessionExtended, object>> property, string jsonKey)
+    
+        public IKeycloakAuthProvider MapClaim(Expression<Func<AuthUserSession, object>> property, string jsonKey)
         {
             MapClaim(new KeycloakClaimMap(property, jsonKey));
             return this;

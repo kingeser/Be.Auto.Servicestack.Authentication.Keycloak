@@ -1,3 +1,4 @@
+using Be.Auto.Servicestack.Authentication.Keycloak.Claim;
 using Be.Auto.Servicestack.Authentication.Keycloak.Extensions;
 using Be.Auto.Servicestack.Authentication.Keycloak.Providers;
 using Funq;
@@ -35,11 +36,17 @@ public class AppHost : AppHostBase, IHostingStartup
         var authFeauture = new AuthFeature(() => new AuthUserSession(), new IAuthProvider[]
         {
             new KeycloakCredentialsAuthProvider(AppSettings)
-                .MapClaim(t => t.Roles, "role")
-                .MapClaim(t => t.Permissions, "groups"),
+                .MapClaim(t => t.Roles!, "role")
+                .MapClaim(t => t.Meta!, "LineId")
+                .MapClaim(t => t.Meta!, "TaxId")
+                .MapClaim(t=>t.Meta!,"Agency"),
+
+
             new KeycloakOAuthProvider(AppSettings)
-                .MapClaim(t => t.Roles, "role")
-                .MapClaim(t => t.Permissions, "groups")
+                .MapClaim(t => t.Roles!, "role")
+                .MapClaim(t => t.Meta!, "LineId")
+                .MapClaim(t => t.Meta!, "TaxId")
+                .MapClaim(t=>t.Meta!,"Agency"),
         });
 
         Plugins.Add(authFeauture);
