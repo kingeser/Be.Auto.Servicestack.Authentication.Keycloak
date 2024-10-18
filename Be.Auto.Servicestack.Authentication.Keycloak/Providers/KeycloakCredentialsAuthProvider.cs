@@ -28,7 +28,7 @@ namespace Be.Auto.Servicestack.Authentication.Keycloak.Providers
             var endPoints = KeycloakEndPointHelper.FindEndPoints(appSettings.GetString("Keycloak:AuthRealm"));
             AuthRealm = endPoints.AuthorizeUrl;
             UserProfileUrl = endPoints.UserInfoUrl;
-            VerifyTokenUrl = endPoints.TokenUrl;
+            VerifyTokenUrl = endPoints.IntrospectUrl;
             AccessTokenUrl = endPoints.TokenUrl;
             ClientId = appSettings.GetString("Keycloak:ClientId");
             ClientSecret = appSettings.GetString("Keycloak:ClientSecret");
